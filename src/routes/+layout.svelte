@@ -11,7 +11,6 @@
 
     import "../app.css";
 
-
     let isMobileMenuOpen = false;
 
     const toggleMobileMenu = () => {
@@ -31,10 +30,14 @@
     });
 
     let isListCategoryRevealed = false;
-    const toggleListCategories= () => {
+    const toggleListCategories = () => {
         isListCategoryRevealed = !isListCategoryRevealed;
     };
 
+    let isDarkMode = true;
+    const setDarkMode = () => {
+        isDarkMode = !isDarkMode;
+    }
 </script>
 
 <style>
@@ -145,7 +148,10 @@
             <Button variant="ghost">Guidelines</Button>
             <Button variant="ghost">About Us</Button>
             <Button variant="ghost" href="/login">Sign In</Button>
-            <Button on:click={toggleMode} variant="ghost" size="icon" class="theme-toggle-button">
+            <Button on:click={() => {
+                toggleMode();
+                setDarkMode();
+            }} variant="ghost" size="icon" class="theme-toggle-button">
                 <Sun class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <Moon class="moon-icon h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                 <span class="sr-only">Toggle theme</span>
@@ -167,7 +173,7 @@
 {#if isMobileMenuOpen}
 <div class="h-screen w-screen backdrop-brightness-50 top-0 left-0 fixed">
     <aside id="sidebar" class="fixed left-0 top-0 z-40 h-screen w-64 transition-transform" aria-label="Sidebar">
-      <div class="flex h-full flex-col overflow-y-auto border-r px-3 py-4 bg-black">
+      <div class="flex h-full flex-col overflow-y-auto border-r px-3 py-4 {isDarkMode ? "bg-black" : "bg-white"}">
         <div href="#" class="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white justify-between">
           <span class="ml-3 text-base font-semibold">GDPH Demonlist</span>
           <button on:click={toggleMobileMenu}>
@@ -285,13 +291,24 @@
           </li>
 
           <li>
-            <a href="#" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+            <a href="/login" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-settings" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                   </svg>
                   
               <span class="ml-3 flex-1 whitespace-nowrap">Sign In</span>
             </a>
+          </li>
+
+          <li>
+            <Button on:click={() => {
+                toggleMode();
+                setDarkMode();
+            }} variant="ghost" size="icon" class="theme-toggle-button">
+                <Sun class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon class="moon-icon h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span class="sr-only">Toggle theme</span>
+            </Button>
           </li>
         </ul>
         <!-- <div class="mt-auto flex">
