@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import * as Menubar from "$lib/components/ui/menubar";
-    import { Button } from "$lib/components/ui/button/index.js";
+    import { Button } from "$lib/components/ui/button/index";
     import { ModeWatcher } from "mode-watcher";
     import Sun from "lucide-svelte/icons/sun";
     import Moon from "lucide-svelte/icons/moon";

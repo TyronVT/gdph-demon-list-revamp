@@ -1,6 +1,6 @@
 <script lang="ts">
     import { slide } from "svelte/transition";
-    import * as Tabs from "$lib/components/ui/tabs/index.js";
+    import * as Tabs from "$lib/components/ui/tabs/index";
 
     export let demons_completed: Promise<any>;
 </script>

@@ -1,10 +1,10 @@
 <script lang="ts">
     import { SERVER_URL } from "../../serverselector";
-    import { Button } from "$lib/components/ui/button/index.js";
+    import { Button } from "$lib/components/ui/button/index";
     import { ChevronDown } from 'lucide-svelte';
     import { ChevronUp } from "lucide-svelte";
 
-    import * as Card from "$lib/components/ui/card/index.js";
+    import * as Card from "$lib/components/ui/card/index";
 	import LeveLeaderboard from "./LeveLeaderboard.svelte";
 
     export let levelName;
