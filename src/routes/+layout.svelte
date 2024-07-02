@@ -65,33 +65,6 @@
         --text: black;
     }
 
-    .mobile-sidenav {
-        width: 75%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-        overflow-x: hidden;
-        transition: transform 0.5s ease, background-color 0.3s, color 0.3s;
-        transform: translateX(-100%);
-        background-color: var(--background);
-        color: var(--text);
-    }
-
-    .mobile-sidenav.true {
-        transform: translateX(0%);
-    }
-
-    .theme-toggle-button {
-        position: relative;
-    }
-
-    .theme-toggle-button .moon-icon {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-
     .demons-category.true {
         display: block;
     }
@@ -144,9 +117,9 @@
             </Menubar.Content>
     
             <Button variant="ghost" href="/leaderboards">Leaderboards</Button>
-            <Button variant="ghost">Changelongs</Button>
-            <Button variant="ghost">Guidelines</Button>
-            <Button variant="ghost">About Us</Button>
+            <Button variant="ghost" href="/changelogs">Changelogs</Button>
+            <Button variant="ghost" href="/guidelines">Guidelines</Button>
+            <Button variant="ghost" href="/about">About Us</Button>
             <Button variant="ghost" href="/login">Sign In</Button>
             <Button on:click={() => {
                 toggleMode();
@@ -174,7 +147,7 @@
 <div class="h-screen w-screen backdrop-brightness-50 top-0 left-0 fixed">
     <aside id="sidebar" class="fixed left-0 top-0 z-40 h-screen w-64 transition-transform" aria-label="Sidebar">
       <div class="flex h-full flex-col overflow-y-auto border-r px-3 py-4 {isDarkMode ? "bg-black" : "bg-white"}">
-        <div href="#" class="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white justify-between">
+        <div class="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white justify-between">
           <span class="ml-3 text-base font-semibold">GDPH Demonlist</span>
           <button on:click={toggleMobileMenu}>
               <PanelLeftClose/>
@@ -193,14 +166,14 @@
           </li>
 
           <li>
-            <a href="#" on:click={toggleListCategories} class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+            <button on:click={toggleListCategories} class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
                 {#if isListCategoryRevealed}
                     <ChevronUp />
                 {:else}
                     <ChevronDown />
                 {/if}
                 <span class="ml-3 flex-1 whitespace-nowrap">Top 150 List</span>
-            </a>
+            </button>
 
             <ul class="demons-category {isListCategoryRevealed ? true : false}">
                 <a href="/levels/main" class="flex items-center rounded-lg px-6 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
@@ -233,7 +206,7 @@
                 <span class="ml-3 flex-1 whitespace-nowrap">Legacy List</span>
                 </a>
 
-                <a href="#" class="flex items-center rounded-lg px-6 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+                <a href="/progress" class="flex items-center rounded-lg px-6 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-home" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                     <circle cx="9" cy="7" r="4" />
@@ -247,7 +220,7 @@
           </li>
 
           <li>
-            <a href="#" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+            <a href="/leaderboards" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-home" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
@@ -259,7 +232,7 @@
           </li>
 
           <li>
-            <a href="#" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+            <a href="/changelogs" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-home" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M16.5 9.4 7.55 4.24" />
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
@@ -271,17 +244,17 @@
           </li>
 
           <li>
-            <a href="#" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+            <a href="/guidelines" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-settings" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
                 <circle cx="12" cy="12" r="3" />
               </svg>
-              <span class="ml-3 flex-1 whitespace-nowrap">Guidelines</span>
+              <span class="ml-3 flex-1 whitespace-nowrap" href="/guidelines">Guidelines</span>
             </a>
           </li>
 
           <li>
-            <a href="#" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+            <a href="/about" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-settings" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
                 <circle cx="12" cy="12" r="3" />

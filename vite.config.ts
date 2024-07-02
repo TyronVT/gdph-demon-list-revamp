@@ -5,5 +5,8 @@ export default defineConfig({
 	plugins: [sveltekit()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
+	},
+	optimizeDeps: {
+		include: ['src/routes/**/+*.{js,ts,svelte}','src/hooks*.{js,ts}']
 	}
 });
