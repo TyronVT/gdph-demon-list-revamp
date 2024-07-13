@@ -11,16 +11,14 @@ function formatDateForPocketBase(datetimeLocal) {
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.000Z`;
 }
-  
 export const actions = {
     changeDemonRank: async ({ request, locals }) => {
         const data = Object.fromEntries(await request.formData());
         try {
-            const newRank = Number(data['level_rank_int']);
-
+            var newRank = Number(data['level_rank_int']);
             let levelsinDB = await locals.pb.collection('levels').getFullList({sort: 'level_rank_int'});
 
-            let level = levelsinDB.find(lvl => lvl['level_name'] === data['level_name']);
+            var level = levelsinDB.find(lvl => lvl['level_name'] === data['level_name']);
             if (!level) {
                 return { error: 'Level not found' };
             }
@@ -72,7 +70,7 @@ export const actions = {
     submitDemon: async ({ request, locals }) => {
         const data = Object.fromEntries(await request.formData());
         try {
-            const newRank = Number(data['demon-rank']);
+           var newRank = Number(data['demon-rank']);
 
             let levelsinDB = await locals.pb.collection('levels').getFullList({ sort: 'level_rank_int' });
 
@@ -85,7 +83,7 @@ export const actions = {
                 await locals.pb.collection('levels').update(levelsinDB[i].id, levelsinDB[i]);
             }
 
-            const newLevel = {
+            var newLevel = {
                 level_name: data['demon-name'],
                 level_rank_int: newRank
             };
@@ -146,10 +144,14 @@ export const actions = {
             }
 
             let deleteLevelRecord = await locals.pb.collection('levels').delete(level.id);
+            let jsondata = {
+                success: deleteLevelRecord,
+                level: level.level_name
+            }
             await locals.pb.collection('admin_activity').create({
                 "action": "DELETE_DEMON",
                 "admin": locals.user.email,
-                "data": deleteLevelRecord
+                "data": jsondata
             });
 
             return { 
@@ -205,10 +207,14 @@ export const actions = {
                 };
             }
             let deletePlayerRecord = await locals.pb.collection('player_table').delete(player.id);
+            let deleteData = {
+                'status': deletePlayerRecord,
+                'player_name': data['player_name']
+            }
             await locals.pb.collection('admin_activity').create({
                 "action": "REMOVE_PLAYER",
                 "admin": locals.user.email,
-                "data": deletePlayerRecord
+                "data": deleteData
             });
 
             return { 
@@ -274,9 +280,8 @@ export const actions = {
     }
 }
 
-
-
-export const load = async ({ locals }) => {
+export const load = async ({ locals, parent }) => {
+    await locals.pb.collection('users').authRefresh();
     if (!locals.pb.authStore.isValid) {
         throw redirect(303, '/login');
     }
@@ -290,9 +295,9 @@ export const load = async ({ locals }) => {
     }
 
     async function getPlayerLevels() {
-        return await locals.pb.collection("player_levels").getOne('pws30t99haai7e7');
+        return await locals.pb.collection("player_levels").getFullList({sort: 'player_name'});
     }
-    
+
     return {
         user: locals.user,
         levels: await getLevels(),

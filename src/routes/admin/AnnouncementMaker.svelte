@@ -28,7 +28,7 @@
     import { Redo2 } from 'lucide-svelte';
     import Button from "$lib/components/ui/button/button.svelte";
     import { PaintBucket } from 'lucide-svelte';
-
+    
     let element;
     let editor;
     let editorHTML;
@@ -82,15 +82,14 @@
   button:hover {
     background-color: #434343;
   }
-
 </style>
 
 <div class="flex flex-col">
     {#if editor}
       <div class="control-group">
-        <div class="button-group flex gap-1">
+        <div class="button-group flex-wrap gap-1">
           <button
-            on:click={() => console.log && editor.chain().focus().toggleBold().run()}
+            on:click={() => editor.chain().focus().toggleBold().run()}
             disabled={!editor.can().chain().focus().toggleBold().run()}
             class={editor.isActive("bold") ? "is-active" : ""}
           >
@@ -216,8 +215,8 @@
     {/if}
     <br>
 </div>
-<div bind:this={element} class="bg-gray-900 p-1"/>
-
+<div bind:this={element} class="p-1 border-5 border-gray-800 border-2"/>
+<br>
 <form action="?/postAnnouncement" method="POST">
   <input type="hidden" value="{editorHTML}" name="announcement_content">
   <Button type="submit">Post Announcement</Button>

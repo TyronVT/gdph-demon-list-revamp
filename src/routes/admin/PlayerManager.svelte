@@ -3,21 +3,34 @@
     import { Button } from "$lib/components/ui/button/index";
     import { Separator } from "$lib/components/ui/separator/index"
     import { enhance } from '$app/forms';
-
+    import { user } from "../../stores";
+    import { checkPermissions } from "$lib/rbacUtils";
+    import { PERMISSIONS } from "../../constants";
     export let data;
     export let form;
 
     let items = data;
+
+    $: canAddPlayer = checkPermissions($user, PERMISSIONS.ADD_PLAYER)
+    $: canAddDemonToPlayer = checkPermissions($user, PERMISSIONS.ADD_DEMON_TO_PLAYER);
+    $: canDeletePlayer = checkPermissions($user, PERMISSIONS.DELETE_PLAYER);
 </script>
 
 <style>
     input, select {
         padding: 0.2rem;
-        color: white;
+        color: var(--color);
+        border: 2px solid grey;
+        border-radius: 0.3rem;
     }
 </style>
 
 <div class="lg:p-10 flex flex-col gap-10 items-center">
+    {#if !canAddPlayer && !canAddDemonToPlayer && !canDeletePlayer}
+        <h1>Unauthorized.</h1>
+    {/if}
+    <!-- Add Player-->
+    {#if canAddPlayer}
     <Card.Root class="w-9/12 flex flex-col items-center">
         <Card.Header>
             <Card.Title>
@@ -31,7 +44,7 @@
             <p>Enter player name:</p>
             <form action="?/addPlayer" method="POST" use:enhance>
                 <input type="text" id="player-name" name="player_name" class="text-input">
-                <br>
+                <br><br>
                 <Button type="submit">Add player</Button>
             </form>
         </Card.Content>
@@ -45,7 +58,10 @@
             {/if}
         {/if}
     </Card.Root>
+    {/if}
 
+    {#if canAddDemonToPlayer}
+    <!-- Add demon to player -->
     <Card.Root class="w-9/12 flex flex-col items-center">
         <Card.Header>
             <Card.Title>
@@ -90,7 +106,7 @@
     
                 <p>Enter date completed (MM/DD/YYYY)</p>
                 <input type="datetime-local" class="text-input" id="date" name="completed_at">
-                <br>
+                <br><br>
                 <Button type="submit">Add Demon to Player</Button>
             </form>
         </Card.Content>
@@ -104,7 +120,10 @@
             {/if}
         {/if}
     </Card.Root>
+    {/if}
 
+    {#if canDeletePlayer}
+    <!-- Remove player -->
     <Card.Root class="w-9/12 flex flex-col items-center">
         <Card.Header>
             <Card.Title>
@@ -118,7 +137,7 @@
             <p>Enter player name:</p>
             <form action="?/removePlayer" method="POST" use:enhance>
                 <input type="text" id="player-name" name="player_name" class="text-input">
-                <br>
+                <br><br>
                 <Button type="submit">Remove player</Button>
             </form>
         </Card.Content>
@@ -132,5 +151,5 @@
             {/if}
         {/if}
     </Card.Root>
-
+    {/if}
 </div>

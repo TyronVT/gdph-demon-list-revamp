@@ -3,20 +3,35 @@
     import { Button } from "$lib/components/ui/button/index";
     import { Separator } from "$lib/components/ui/separator/index"
     import { enhance } from '$app/forms';
-
+    import { user } from "../../stores";
+    import { checkPermissions } from "$lib/rbacUtils";
+    import { PERMISSIONS } from "../../constants";
     export let data;
     export let form;
     let items = data;
+
+    $: canAddDemon = checkPermissions($user, PERMISSIONS.ADD_DEMON);
+    $: canChangeDemonRank = checkPermissions($user, PERMISSIONS.CHANGE_DEMON_RANK);
+    $: canDeleteDemon = checkPermissions($user, PERMISSIONS.DELETE_DEMON);
 </script>
 
 <style>
     input, select {
         padding: 0.2rem;
-        color: white;
+        color: var(--color);
+        border: 2px solid grey;
+        border-radius: 0.3rem;
     }
+
 </style>
 
 <div class="lg:p-10 flex flex-col gap-10 items-center">
+    {#if !canAddDemon && !canChangeDemonRank && !canDeleteDemon}
+        <h1>Unauthorized.</h1>
+    {/if}
+
+    <!-- Add Demon -->
+    {#if canAddDemon}
     <Card.Root class="w-9/12 flex flex-col items-center">
         <Card.Header>
             <Card.Title>
@@ -33,7 +48,7 @@
         
                 <p>Enter demon rank:</p>
                 <input type="number" id="demon-rank" name="demon-rank" class="text-input">
-                <br>
+                <br><br>
                 <Button type="submit">Add Demon</Button>
             </form>
         </Card.Content>
@@ -46,7 +61,10 @@
             {/if}
         {/if}
     </Card.Root>
+    {/if}
 
+    {#if canChangeDemonRank}
+    <!-- Change Demon Rank -->
     <Card.Root class="w-9/12 flex flex-col items-center">
         <Card.Header>
             <Card.Title>
@@ -73,7 +91,7 @@
                 <br><br>
                 <p>Enter new rank:</p>
                 <input type="number" class="text-input" id="level_rank_int" name="level_rank_int">
-                <br>
+                <br><br>
                 <Button type="submit">Change rank</Button>
             </form>
         </Card.Content>
@@ -87,7 +105,10 @@
             {/if}
         {/if}
     </Card.Root>
-        
+    {/if} 
+
+    {#if canDeleteDemon}
+    <!-- Delete Demon -->
     <Card.Root class="w-9/12 flex flex-col items-center">
         <Card.Header>
             <Card.Title>
@@ -111,7 +132,7 @@
                         <p>{error.message}</p>
                     {/await}
                 </select>
-                <br>
+                <br><br>
                 <Button type="submit">Delete Demon</Button>
             </form>
         </Card.Content>
@@ -124,4 +145,5 @@
             {/if}
         {/if}
     </Card.Root>
+    {/if}
 </div>

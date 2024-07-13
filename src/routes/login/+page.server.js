@@ -4,7 +4,7 @@ export const actions = {
     login: async ({ request, locals }) => {
         const body = Object.fromEntries(await request.formData());
         try {
-            await locals.pb.admins.authWithPassword(body.email, body.password);
+            await locals.pb.collection('users').authWithPassword(body.email, body.password);
             if(!locals.pb?.authStore?.isValid) {
                 locals.pb.authStore.clear()
                 return {

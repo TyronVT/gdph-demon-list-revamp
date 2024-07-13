@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
     import { onMount } from 'svelte';
     import * as Menubar from "$lib/components/ui/menubar";
     import { Button } from "$lib/components/ui/button/index";
@@ -8,8 +8,10 @@
     import { ChevronDown } from 'lucide-svelte';
     import { ChevronUp } from 'lucide-svelte';
     import { PanelLeftClose } from 'lucide-svelte';
-
+    import { isDarkMode } from '../stores';
     import "../app.css";
+
+    export let data;
 
     let isMobileMenuOpen = false;
 
@@ -34,10 +36,10 @@
         isListCategoryRevealed = !isListCategoryRevealed;
     };
 
-    let isDarkMode = true;
     const setDarkMode = () => {
-        isDarkMode = !isDarkMode;
+        $isDarkMode = !$isDarkMode;
     }
+
 </script>
 
 <style>
@@ -120,7 +122,13 @@
             <Button variant="ghost" href="/changelogs">Changelogs</Button>
             <Button variant="ghost" href="/guidelines">Guidelines</Button>
             <Button variant="ghost" href="/about">About Us</Button>
-            <Button variant="ghost" href="/login">Sign In</Button>
+
+            {#if !(data.user)}
+              <Button variant="ghost" href="/login">Sign In</Button>
+            {:else}            
+              <Button variant="ghost" href="/admin">Admin</Button>
+            {/if}
+
             <Button on:click={() => {
                 toggleMode();
                 setDarkMode();
@@ -133,7 +141,7 @@
     </Menubar.Root>
 
     <!-- Mobile Menu Button -->
-    <div class="md:hidden flex items-center">
+    <div class="md:hidden flex items-center z-10">
         <button class="p-2 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring" on:click={toggleMobileMenu}>
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
@@ -146,7 +154,7 @@
 {#if isMobileMenuOpen}
 <div class="h-screen w-screen backdrop-brightness-50 top-0 left-0 fixed">
     <aside id="sidebar" class="fixed left-0 top-0 z-40 h-screen w-64 transition-transform" aria-label="Sidebar">
-      <div class="flex h-full flex-col overflow-y-auto border-r px-3 py-4 {isDarkMode ? "bg-black" : "bg-white"}">
+      <div class="flex h-full flex-col overflow-y-auto border-r px-3 py-4 {$isDarkMode ? "bg-black" : "bg-white"}">
         <div class="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white justify-between">
           <span class="ml-3 text-base font-semibold">GDPH Demonlist</span>
           <button on:click={toggleMobileMenu}>
@@ -156,7 +164,7 @@
         <ul class="space-y-2 text-sm font-medium">
 
           <li>
-            <a href="/" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+            <a href="/" class="flex items-center rounded-lg px-3 py-2 hover:bg-slate-100">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-home" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 <polyline points="9 22 9 12 15 12 15 22" />
@@ -264,13 +272,23 @@
           </li>
 
           <li>
-            <a href="/login" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-settings" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                  </svg>
-                  
-              <span class="ml-3 flex-1 whitespace-nowrap">Sign In</span>
-            </a>
+            {#if !(data.user)}
+              <a href="/login" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-settings" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                </svg>
+              </a>
+                    
+                <span class="ml-3 flex-1 whitespace-nowrap">Sign In</span>
+            {:else}
+              <a href="/admin" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-settings" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                    </svg>
+                    
+                <span class="ml-3 flex-1 whitespace-nowrap">Admin</span>
+              </a>
+            {/if}
           </li>
 
           <li>
