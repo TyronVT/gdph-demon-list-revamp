@@ -26,7 +26,7 @@ Will add more features and polish the website in the near future.
 
 ## Coming Soon
 
-- Search for players and levels on the admin portal instead of a drop-down list.
+✅ Search for players and levels on the admin portal instead of a drop-down list.
 - Pin an announcement.
 
 
