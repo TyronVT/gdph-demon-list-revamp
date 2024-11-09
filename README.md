@@ -24,4 +24,9 @@ Will add more features and polish the website in the near future.
 - Admin UI is supported in mobile.
 - Add an announcement.
 
+## Coming Soon
+
+- Search for players and levels on the admin portal instead of a drop-down list.
+- Pin an announcement.
+
 
