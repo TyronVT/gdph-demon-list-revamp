@@ -2,7 +2,7 @@
     import Titlepage from "../Titlepage.svelte";
     import Player from "./Player.svelte";
     import Pocketbase from "pocketbase";
-    import {SERVER_URL} from "../../serverselector";
+    import {SERVER_URL} from "../../config";
     
     const pb = new Pocketbase(SERVER_URL);
     async function getPlayers() {

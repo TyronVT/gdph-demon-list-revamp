@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { SERVER_URL } from "../../serverselector";
+    import { SERVER_URL } from "../../config";
     import { Button } from "$lib/components/ui/button/index";
     import { ChevronDown } from 'lucide-svelte';
     import { ChevronUp } from "lucide-svelte";

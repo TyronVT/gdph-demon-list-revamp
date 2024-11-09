@@ -6,7 +6,7 @@
     import { user } from "../../stores";
     import { checkPermissions } from "$lib/rbacUtils";
     import { PERMISSIONS } from "../../constants";
-	import { SERVER_URL } from "../../serverselector";
+	import { SERVER_URL } from "../../config";
     export let data;
     export let form;
 

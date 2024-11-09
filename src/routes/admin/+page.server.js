@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import { SERVER_URL } from '../../serverselector';
+import { SERVER_URL } from '../../config';
 import Level from '../levels/Level.svelte';
 
 function formatDateForPocketBase(datetimeLocal) {

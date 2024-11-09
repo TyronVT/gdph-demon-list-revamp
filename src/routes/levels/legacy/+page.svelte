@@ -1,7 +1,7 @@
 <script>
     import Titlepage from "../../Titlepage.svelte";
     import Level from "../Level.svelte";
-    import {SERVER_URL} from "../../../serverselector";
+    import {SERVER_URL} from "../../../config";
     
     async function getLevels() {
         return fetch(`${SERVER_URL}/api/levels/legacy`)

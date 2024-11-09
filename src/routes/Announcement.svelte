@@ -1,5 +1,5 @@
 <script>
-    import { SERVER_URL } from "../serverselector";
+    import { SERVER_URL } from "../config";
     import { Separator } from "$lib/components/ui/separator/index"
     import Pocketbase from "pocketbase";
     const pb = new Pocketbase(SERVER_URL);
