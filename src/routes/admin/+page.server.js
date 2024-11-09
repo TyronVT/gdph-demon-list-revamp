@@ -77,6 +77,7 @@ export const actions = {
                 "rank": levelRank,
             };
 
+            
             const response = await fetch(`${submitDemonURL}/${encodeURIComponent(JSON.stringify(jsonData))}`,
             {
                 headers: {
@@ -119,10 +120,8 @@ export const actions = {
         const data = Object.fromEntries(await request.formData());
         try {
             const levelName = String(data['level_name']);
-            const jsonData = {
-                "level_name": levelName
-            };
             const removeDemonURL = `${SERVER_URL}/api/remove_level`;
+
             const response = await fetch(
                 `${removeDemonURL}/${encodeURIComponent(levelName)}`,
                 {
@@ -138,6 +137,7 @@ export const actions = {
                     error: "401: Unauthorized!" 
                 };
             } else {
+                console.log(JSON.stringify(response));
                 await locals.pb.collection('admin_activity').create({
                     "action": "DELETE_DEMON",
                     "admin": locals.user.email,
@@ -239,13 +239,10 @@ export const actions = {
                 success: true,
             };
         } catch (error) {
-            let errormsg = error.message;
-            if (error.data.data.player_name.message === "Value must be unique.") {
-                errormsg = "Demon already exists for player."
-            }
+            console.log(JSON.stringify(error));
             return { 
                 formname: "addDemonToPlayer",
-                error: errormsg, 
+                error: "Something went wrong.", 
                 player_name: data['player_name'],
                 level_name: data['level_name']
             };
@@ -258,14 +255,25 @@ export const actions = {
             .getFullList({
                 filter: `player_name="${data['player_name']}" && level_name="${data['level_name']}"`
             });
-        const deleteRecord = await locals.pb.collection('player_levels').delete(record[0]["id"]);
+        console.log(JSON.stringify(record));
+        try {
+            const deleteRecord = await locals.pb.collection('player_levels').delete(record[0]["id"]);
+            return { 
+                formname: "removeDemonFromPlayer",
+                player_name: data['player_name'],
+                level_name: data['level_name'],
+                success: true,
+            };
 
-        return { 
-            formname: "removeDemonFromPlayer",
-            player_name: data['player_name'],
-            level_name: data['level_name'],
-            success: true,
-        };
+        } catch (error) {
+            return { 
+                formname: "removeDemonFromPlayer",
+                player_name: data['player_name'],
+                level_name: data['level_name'],
+                error: "Something went wrong removing.",
+            };
+        }
+
     },
 
     postAnnouncement: async ({ request, locals }) => {
