@@ -6,14 +6,58 @@
     import { user } from "../../stores";
     import { checkPermissions } from "$lib/rbacUtils";
     import { PERMISSIONS } from "../../constants";
+	import { SERVER_URL } from "../../serverselector";
     export let data;
     export let form;
 
     let items = data;
+    let selectedPlayer = '';
+    let playerLevels = [];
+    let isLoadingLevels = false;
 
-    $: canAddPlayer = checkPermissions($user, PERMISSIONS.ADD_PLAYER)
+    async function getSpecificPlayerLevels(playerName) {
+        if (!playerName) return [];
+        isLoadingLevels = true;
+        try {
+            const response = await fetch(`${SERVER_URL}/api/player_demons/${playerName}`);
+            if (!response.ok) {
+                console.log("Not ok.");
+                isLoadingLevels = false;
+                return [];
+            }
+            const jsonData = await response.json();
+            var levels = [];
+            levels = levels.concat(jsonData["Extended Demons"])
+                         .concat(jsonData["Main Demons"])
+                         .concat(jsonData["In Progress"])
+                         .concat(jsonData["Legacy List"]);
+            isLoadingLevels = false;
+            return levels.sort((a, b) => {
+                if (a.level_name < b.level_name) return -1;
+                if (a.level_name > b.level_name) return 1;
+                return 0;
+            });
+        } catch (error) {
+            console.error('Error fetching player levels:', error);
+            isLoadingLevels = false;
+            return [];
+        }
+    }
+    // Update playerLevels when selectedPlayer changes
+    $: {
+        if (selectedPlayer) {
+            getSpecificPlayerLevels(selectedPlayer).then(levels => {
+                playerLevels = levels;
+            });
+        } else {
+            playerLevels = [];
+        }
+    }
+    $: canAddPlayer = checkPermissions($user, PERMISSIONS.ADD_PLAYER);
     $: canAddDemonToPlayer = checkPermissions($user, PERMISSIONS.ADD_DEMON_TO_PLAYER);
     $: canDeletePlayer = checkPermissions($user, PERMISSIONS.DELETE_PLAYER);
+    $: canRemoveDemonFromPlayer = checkPermissions($user, PERMISSIONS.REMOVE_DEMON_FROM_PLAYER);
+
 </script>
 
 <style>
@@ -60,8 +104,8 @@
     </Card.Root>
     {/if}
 
-    {#if canAddDemonToPlayer}
     <!-- Add demon to player -->
+    {#if canAddDemonToPlayer}
     <Card.Root class="w-9/12 flex flex-col items-center">
         <Card.Header>
             <Card.Title>
@@ -122,8 +166,8 @@
     </Card.Root>
     {/if}
 
-    {#if canDeletePlayer}
     <!-- Remove player -->
+    {#if canDeletePlayer}
     <Card.Root class="w-9/12 flex flex-col items-center">
         <Card.Header>
             <Card.Title>
@@ -152,4 +196,76 @@
         {/if}
     </Card.Root>
     {/if}
+
+    <!-- Remove demon from player -->
+     {#if canRemoveDemonFromPlayer}
+     <Card.Root class="w-9/12 flex flex-col items-center">
+        <Card.Header>
+            <Card.Title>
+                Remove demon from player
+            </Card.Title>
+        </Card.Header>
+        
+        <Separator />
+
+        <Card.Content class="flex flex-col">
+            <form action="?/removeDemonFromPlayer" method="POST" use:enhance>
+                <div class="select-container">
+                    <p class="select-label">Select Player:</p>
+                    <select 
+                        id="players-select" 
+                        name="player_name"
+                        bind:value={selectedPlayer}
+                    >
+                        <option value="">Choose a player...</option>
+                        {#await data.players}
+                            <option disabled>Loading players...</option>
+                        {:then data}
+                            {#each data as player}
+                                <option value={player.player_name}>
+                                    {player.player_name}
+                                </option>
+                            {/each}
+                        {/await}
+                    </select>
+                </div>
+
+                <div class="select-container">
+                    <p class="select-label">Select Demon to Remove:</p>
+                    <select 
+                        id="level-select" 
+                        name="level_name"
+                        disabled={!selectedPlayer || isLoadingLevels}
+                    >
+                        {#if isLoadingLevels}
+                            <option disabled>Loading demons...</option>
+                        {:else}
+                            {#each playerLevels as level}
+                                <option value={level.level_name}>
+                                    {level.level_name}
+                                </option>
+                            {/each}
+                        {/if}
+                    </select>
+                </div>
+                
+                <br>
+                <Button 
+                    type="submit" 
+                    disabled={!selectedPlayer || !playerLevels.length}
+                >
+                    Remove Demon from Player
+                </Button>
+            </form>
+            {#if form?.formname === "removeDemonFromPlayer"}
+                {#if form?.success}
+                    <p class="success"><strong>{form.level_name}</strong> removed from <strong>{form.player_name}</strong></p>
+                {/if}
+                {#if form?.error}
+                    <p>{form.error}</p>
+                {/if}
+            {/if}
+        </Card.Content>
+    </Card.Root>
+     {/if}
 </div>

@@ -29,6 +29,10 @@
     import Button from "$lib/components/ui/button/button.svelte";
     import { PaintBucket } from 'lucide-svelte';
     
+    import Separator from "$lib/components/ui/separator/separator.svelte";
+    import { enhance } from '$app/forms';
+    import * as AlertDialog from "$lib/components/ui/alert-dialog";
+
     let element;
     let editor;
     let editorHTML;
@@ -69,6 +73,8 @@
 
   let color = "// instance of Colord"
 
+  export let data;
+  export let form;
   </script>
 
 <style>
@@ -84,6 +90,7 @@
   }
 </style>
 
+<!-- ANNOUNCEMENT MAKER -->
 <div class="flex flex-col">
     {#if editor}
       <div class="control-group">
@@ -221,3 +228,17 @@
   <input type="hidden" value="{editorHTML}" name="announcement_content">
   <Button type="submit">Post Announcement</Button>
 </form>
+
+<br>
+
+<!-- ANNOUNCEMENT REMOVER -->
+{#each data.reverse() as announcement}
+  <form method="POST" action="?/deleteAnnouncement" use:enhance>
+  <Button variant="destructive" type="submit">Remove Announcement</Button>
+    <div class="rounded-sm border-2 p-5">
+      {@html announcement.richhtml}
+    </div>
+    <input type="hidden" value="{announcement.id}" name="announcement_id">
+    <Separator />
+  </form>
+{/each}

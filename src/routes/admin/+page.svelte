@@ -1,19 +1,36 @@
 <script>
     import AnnouncementMaker from "./AnnouncementMaker.svelte";
     import * as Tabs from "$lib/components/ui/tabs/index";
-    import DemonManager from "./DemonManager.svelte";
-    import PlayerManager from "./PlayerManager.svelte";
-    import { checkRole } from "$lib/rbacUtils";
-    import { ROLES } from "../../constants";
-    import { user, isHelper, isLeader, isModerator } from "../../stores";
-
+    import { checkPermissions } from "$lib/rbacUtils";
+    import { PERMISSIONS } from "../../constants";
+    import { user } from "../../stores";
     export let data;
     export let form;
     
     $user = data.user;
-    $isHelper = checkRole($user, ROLES.HELPER);
-    $isModerator = checkRole($user, ROLES.MODERATOR);
-    $isLeader = checkRole($user, ROLES.LEADER);
+    
+    let canManageDemons = (
+        checkPermissions($user, PERMISSIONS.ADD_DEMON) || 
+        checkPermissions($user, PERMISSIONS.CHANGE_DEMON_RANK) || 
+        checkPermissions($user, PERMISSIONS.DELETE_DEMON)
+    );
+
+    let canManagePlayers = (
+        checkPermissions($user, PERMISSIONS.ADD_PLAYER) || 
+        checkPermissions($user, PERMISSIONS.ADD_DEMON_TO_PLAYER) ||
+        checkPermissions($user, PERMISSIONS.DELETE_PLAYER)
+    )
+    
+    let demonManager; 
+    if (canManageDemons) {
+        demonManager = import('./DemonManager.svelte');
+    }
+
+    let playerManager;
+    if (canManagePlayers) {
+        playerManager = import('./PlayerManager.svelte');
+    }
+
 </script>
 
 <div class="w-full flex flex-col items-center">
@@ -25,17 +42,35 @@
             <Tabs.Trigger value="players">Manage Players</Tabs.Trigger>
             <Tabs.Trigger value="manage-announcements">Manage Announcements</Tabs.Trigger>
         </Tabs.List>
-        
+       
         <Tabs.Content value="demons">
-            <DemonManager data={data.levels} form={form}/>
+            {#if demonManager}
+                {#await demonManager then { default: DemonManager }}
+                    {#key data.levels}
+                        <DemonManager data={data.levels} form={form}/>
+                    {/key}
+                {/await}
+            {:else}
+                <p>Unauthorized.</p>
+            {/if}
         </Tabs.Content>
-    
+            
         <Tabs.Content value="players">
-            <PlayerManager data={data} form={form}/>
+            {#if playerManager}
+                {#await playerManager then { default: PlayerManager }} 
+                    {#key data}
+                        <PlayerManager data={data} form={form}/>
+                    {/key}
+                {/await}
+            {:else}
+                <p>Unauthorized.</p> 
+            {/if}
         </Tabs.Content>
     
         <Tabs.Content value="manage-announcements">
-            <AnnouncementMaker />
+            {#key data}
+                <AnnouncementMaker data={data.announcements}/>
+            {/key}
         </Tabs.Content>
 
     </Tabs.Root>

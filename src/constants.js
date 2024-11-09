@@ -10,6 +10,7 @@ export const PERMISSIONS = {
     DELETE_DEMON: "delete:demon",
     ADD_PLAYER: "add:player",
     ADD_DEMON_TO_PLAYER: "add:demon_to_player",
+    REMOVE_DEMON_FROM_PLAYER: "delete:demon_from_player",
     DELETE_PLAYER: "delete:player",
     ADD_ANNOUNCEMENT: "add:announcement",
     REMOVE_ANNOUNCEMENT: "delete:announcement",

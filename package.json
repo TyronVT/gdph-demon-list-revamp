@@ -50,7 +50,7 @@
 		"@tiptap/extension-text-style": "^2.4.0",
 		"@tiptap/pm": "^2.4.0",
 		"@tiptap/starter-kit": "^2.4.0",
-		"bits-ui": "^0.21.10",
+		"bits-ui": "^0.21.12",
 		"browserify": "^17.0.0",
 		"clsx": "^2.1.1",
 		"formsnap": "^1.0.0",

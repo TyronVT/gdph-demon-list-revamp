@@ -1,6 +1,5 @@
 <script>
     import Announcement from "./Announcement.svelte";
-    import Comingsoon from "./Comingsoon.svelte";
 	import HomeInfo from "./HomeInfo.svelte";
     import Titlepage from "./Titlepage.svelte";
 </script>

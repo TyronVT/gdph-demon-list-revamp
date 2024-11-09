@@ -9,7 +9,7 @@
             sort: '-created',
         });
         return records
-    }
+    };
 </script>
 
 {#await getAnnouncements()}

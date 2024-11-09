@@ -26,10 +26,6 @@
 </style>
 
 <div class="lg:p-10 flex flex-col gap-10 items-center">
-    {#if !canAddDemon && !canChangeDemonRank && !canDeleteDemon}
-        <h1>Unauthorized.</h1>
-    {/if}
-
     <!-- Add Demon -->
     {#if canAddDemon}
     <Card.Root class="w-9/12 flex flex-col items-center">
@@ -42,19 +38,19 @@
         <Separator />
         
         <Card.Content>
-            <form method="POST" action="?/submitDemon">
+            <form method="POST" action="?/submitDemonEndpoint" use:enhance>
                 <p>Enter demon name:</p>
-                <input type="text" id="demon-name" name="demon-name" class="text-input">
+                <input type="text" id="level_name" name="level_name" class="text-input">
         
                 <p>Enter demon rank:</p>
-                <input type="number" id="demon-rank" name="demon-rank" class="text-input">
+                <input type="number" id="level_rank" name="level_rank" class="text-input">
                 <br><br>
                 <Button type="submit">Add Demon</Button>
             </form>
         </Card.Content>
         {#if form?.formname === "submitDemon"}
             {#if form?.success}
-                <p>Successfully added <strong>{form.level_name}</strong> with rank <strong>{form.level_rank_int}</strong></p>
+                <p>Successfully added <strong>{form.level_name}</strong> with rank <strong>{form.level_new_rank}</strong></p>
             {/if}
             {#if form?.error}
                 <p>{form.error}</p>
@@ -75,7 +71,7 @@
         <Separator />
 
         <Card.Content>
-            <form action="?/changeDemonRank" method="POST">
+            <form action="?/newChangeDemonRank" method="POST" use:enhance>
                 <p>Select demon:</p>
                 <select id="demons-select" name="level_name" class="">
                     {#await items}
@@ -119,14 +115,14 @@
         <Separator />
 
         <Card.Content>
-            <form method="POST" action="?/deleteDemon">
+            <form method="POST" action="?/deleteDemonEndpoint" use:enhance>
                 <p>Select demon to remove:</p>
-                <select id="demons-select" name="demon_data">
+                <select id="demons-select" name="level_name">
                     {#await items}
                         <p>Waiting ... </p>
                     {:then levels}
                         {#each levels as level}
-                            <option value="{level.level_rank_int},{level.level_name}">#{level.level_rank_int}. {level.level_name}</option>
+                            <option value="{level.level_name}">#{level.level_rank_int}. {level.level_name}</option>
                         {/each} 
                     {:catch error}
                         <p>{error.message}</p>

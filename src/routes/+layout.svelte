@@ -129,6 +129,12 @@
               <Button variant="ghost" href="/admin">Admin</Button>
             {/if}
 
+            {#if data.user}
+            <form action="/logout" method="POST">
+              <Button variant="ghost" type="submit">Logout</Button>
+            </form>
+            {/if}
+
             <Button on:click={() => {
                 toggleMode();
                 setDarkMode();
@@ -277,19 +283,31 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-settings" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                 </svg>
+                <span class="ml-3 flex-1 whitespace-nowrap">Sign In</span>
               </a>
                     
-                <span class="ml-3 flex-1 whitespace-nowrap">Sign In</span>
             {:else}
               <a href="/admin" class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-settings" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                    </svg>
-                    
-                <span class="ml-3 flex-1 whitespace-nowrap">Admin</span>
+                </svg>
+                    <span class="ml-3 flex-1 whitespace-nowrap">Admin</span>
               </a>
             {/if}
           </li>
+
+          {#if data.user}
+            <li>
+              <form action="/logout" method="POST">
+                <button class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-settings" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                  </svg>
+                      <span class="ml-3 flex-1 whitespace-nowrap">Logout</span>
+                </button>
+              </form>
+            </li>
+          {/if}
 
           <li>
             <Button on:click={() => {
