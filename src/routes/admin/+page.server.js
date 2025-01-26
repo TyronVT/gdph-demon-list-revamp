@@ -77,7 +77,8 @@ export const actions = {
                 "rank": levelRank,
             };
 
-            
+            console.log(`${submitDemonURL}/${encodeURIComponent(JSON.stringify(jsonData))}`);
+
             const response = await fetch(`${submitDemonURL}/${encodeURIComponent(JSON.stringify(jsonData))}`,
             {
                 headers: {
@@ -319,6 +320,38 @@ export const actions = {
                 error: error.message
             }
         }
+    },
+
+    changeLeaderboardPositions: async ({ request, locals }) => {
+        const data = Object.fromEntries(await request.formData());
+        let changeLeaderboardPositionsURL = `${SERVER_URL}/api/change_player_positions`;
+        const headers = new Headers();
+        headers.append("Authorization", `Bearer ${locals.pb.authStore.token}`);
+
+        const response = await fetch(`${changeLeaderboardPositionsURL}/${encodeURIComponent(JSON.stringify(data))}`, {
+            headers: headers,
+        });
+
+        let levelName = data['level_name'];
+        if (!response.ok) {
+            return {
+                formname: "changeLeaderboardPositions",
+                level_name: levelName,
+                error: "401: Not authorized!" 
+            };
+
+        } else {
+            await locals.pb.collection('admin_activity').create({
+                "action": "CHANGE LEVEL LEADERBOARD",
+                "admin": locals.user.email,
+                "data": JSON.stringify(data),
+            });
+            return {
+                formname: "changeLeaderboardPositions",
+                level_name: levelName,
+                success: true 
+            };
+        }
     }
 }
 
@@ -342,10 +375,6 @@ export const load = async ({ locals, parent }) => {
 
     async function getAnnouncements() {
         return await locals.pb.collection("announcements").getFullList({sort: 'created'});
-    }
-
-    async function getSpecificPlayerLevels(playerName) {
-        return await locals.pb.collection("player_levels").getFulList(`player_name="${playerName}"`);
     }
 
     return {

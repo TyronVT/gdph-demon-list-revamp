@@ -1,30 +1,39 @@
 <script>
     import * as Card from "$lib/components/ui/card/index";
     import { Button } from "$lib/components/ui/button/index";
-    import { Separator } from "$lib/components/ui/separator/index"
+    import { Separator } from "$lib/components/ui/separator/index";
     import { enhance } from '$app/forms';
     import { user } from "../../stores";
     import { checkPermissions } from "$lib/rbacUtils";
     import { PERMISSIONS } from "../../constants";
     import { SERVER_URL } from "../../config";
+    import { dndzone } from "svelte-dnd-action";
+
+    async function fetchLeaderboard(levelName) {
+        return await fetch(`${SERVER_URL}/api/level_leaderboard/${levelName}`)
+        .then(response => response.json());
+    }
+
     export let data;
     export let form;
 
+    // General Items
     let items = data;
-    let selectedPlayer = '';
-    let playerLevels = [];
     let isLoadingLevels = false;
-
+    
     // Loading states for each form
     let isAddingPlayer = false;
     let isAddingDemonToPlayer = false;
     let isRemovingPlayer = false;
     let isRemovingDemonFromPlayer = false;
+    let isChangingLevelLeaderboardPosition = false;
 
     // Search terms for filtering
+    let selectedPlayer = '';
     let playerSearch = '';
     let demonSearch = '';
     let removePlayerSearch = '';
+    let playerLevels = [];
 
     // Filter function for search
     const filterItems = (items, search) => {
@@ -85,6 +94,9 @@
                 case 'removeDemonFromPlayer':
                     isRemovingDemonFromPlayer = true;
                     break;
+                case 'changeLevelLeaderboardPosition':
+                    isChangingLevelLeaderboardPosition = true;
+                    break;
             }
 
             return async ({ result, update }) => {
@@ -118,10 +130,43 @@
             playerLevels = [];
         }
 
+    // ================== DRAG AND DROP FUNCTIONS =================== //
+    let levelLeaderboardOfLevelCurrentlyBeingViewed = [];
+    function handleDndConsider(e) {
+        levelLeaderboardOfLevelCurrentlyBeingViewed = e.detail.items;
+    }
+
+    function handleDndFinalize(e) {
+        levelLeaderboardOfLevelCurrentlyBeingViewed = e.detail.items;
+        for(let i = 0; i < levelLeaderboardOfLevelCurrentlyBeingViewed.length; i++) {
+            levelLeaderboardOfLevelCurrentlyBeingViewed[i].leaderboard_pos = i + 1;
+        }
+    }
+
+    let selectedLevel = null;
+    $: if (selectedLevel) {
+        fetchLeaderboard(selectedLevel).then(players => {
+            levelLeaderboardOfLevelCurrentlyBeingViewed = players;
+        });
+    } else {
+        levelLeaderboardOfLevelCurrentlyBeingViewed = [];
+    } 
+
+    async function handleLevelChange(e) {
+        selectedLevel = e.target.value;
+        console.log(selectedLevel);
+        try {
+            levelLeaderboardOfLevelCurrentlyBeingViewed = await fetchLeaderboard(selectedLevel);
+        } catch {
+            levelLeaderboardOfLevelCurrentlyBeingViewed = [];
+        }
+    }
+
     $: canAddPlayer = checkPermissions($user, PERMISSIONS.ADD_PLAYER);
     $: canAddDemonToPlayer = checkPermissions($user, PERMISSIONS.ADD_DEMON_TO_PLAYER);
     $: canDeletePlayer = checkPermissions($user, PERMISSIONS.DELETE_PLAYER);
     $: canRemoveDemonFromPlayer = checkPermissions($user, PERMISSIONS.REMOVE_DEMON_FROM_PLAYER);
+    $: canChangePlayerPositionInLevel = checkPermissions($user, PERMISSIONS.CHANGE_PLAYER_POSITION_IN_LEVEL)
 </script>
 
 <style>
@@ -336,4 +381,55 @@
         {/if}
     </Card.Root>
     {/if}
+
+    <!-- Change position of player in leaderboard -->
+    {#if canChangePlayerPositionInLevel}
+        <Card.Root class="w-9/12 flex flex-col items-center">
+        <Card.Header>            
+            <Card.Title>Change Player Position in Demon Leaderboard</Card.Title>
+        </Card.Header>
+
+        <Separator />
+
+        <Card.Content>
+            <p>Search demon</p>
+            <input type="text" bind:value={demonSearch} placeholder="Search demon..." />
+            
+            <form action="?/changeLeaderboardPositions" method="POST" use:enhance={handleSubmit('changeLevelLeaderboardPosition')}>
+                <select id="demons-select" name="level_name" on:change="{handleLevelChange}">
+                    {#each filterDemons(items.levels, demonSearch) as level}
+                        <option value={level.level_name} id="{level.id}">#{level.level_rank_int}. {level.level_name}</option>
+                    {/each}
+                </select>
+
+                <div>
+                    {#if selectedLevel}
+                        {#if levelLeaderboardOfLevelCurrentlyBeingViewed.length > 0}
+                            <div use:dndzone="{{items: levelLeaderboardOfLevelCurrentlyBeingViewed}}"
+                            on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
+                                {#each levelLeaderboardOfLevelCurrentlyBeingViewed as player(player.id)}
+                                    <p>{player.leaderboard_pos}. {player.player_name}</p>
+                                {/each}
+                            </div>
+                            <input type="hidden" name="level_leaderboard" value={JSON.stringify(levelLeaderboardOfLevelCurrentlyBeingViewed)} />
+                            <Button type="submit">Set positions</Button>
+                            {:else}
+                                <p>Empty leaderboards.</p>
+                        {/if}
+                    {/if}
+                </div> 
+            </form>
+
+        </Card.Content>
+        {#if form?.formname === "changeLeaderboardPositions"}
+            {#if form?.success}
+                <p>Successfully reordered players.</p>
+            {/if}
+            {#if form?.error}
+                <p>{form.error}</p>
+            {/if}
+        {/if}
+        </Card.Root>
+    {/if}
+
 </div>

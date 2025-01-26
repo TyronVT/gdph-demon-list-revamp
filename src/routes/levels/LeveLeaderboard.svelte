@@ -15,7 +15,7 @@
                 <p>This demon remains undefeated.</p>
             {/if}
             {#each data as player, index}
-                <p>{index + 1}. {player.player_name}</p>
+                <b><p>{index + 1}. {player.player_name} {player.percent_completed}% <u><a href={player.youtube_video}>[Video]</a></u></p></b>
             {/each}
         </div>
     {:catch error}

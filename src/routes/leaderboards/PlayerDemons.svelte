@@ -20,27 +20,55 @@
             </Tabs.List>
             <Tabs.Content value="main">
                 {#each data["Main Demons"] as level, index}
-                    <b><p>{level.level_name}</p></b>
+                    {#if level.youtube_video}
+                        <a href={level.youtube_video} target="_blank">
+                            <b><p>{level.level_name}</p></b>
+                        </a>
+                    {:else}
+                        <b><p>{level.level_name}</p></b>
+                    {/if}
                 {/each}
             </Tabs.Content>
+            
             <Tabs.Content value="extended">
                 {#each data["Extended Demons"] as level, index}
-                    <p>{level.level_name}</p>
+                    {#if level.youtube_video}
+                        <a href={level.youtube_video} target="_blank">
+                           <p>{level.level_name}</p>
+                        </a>
+                    {:else}
+                        <p>{level.level_name}</p>
+                    {/if}
                 {/each}
             </Tabs.Content>
+            
             <Tabs.Content value="legacy">
                 {#each data["Legacy List"] as level, index}
-                    <i><p>{level.level_name}</p></i>
+                    {#if level.youtube_video}
+                        <a href={level.youtube_video} target="_blank">
+                            <i><p>{level.level_name}</p></i>
+                        </a>
+                    {:else}
+                        <i><p>{level.level_name}</p></i>
+                    {/if}
                 {/each}
             </Tabs.Content>
+            
             <Tabs.Content value="progress">
                 {#if data["In Progress"].length < 1}
                     <p>Nothing in progress.</p>
                 {/if}
                 {#each data["In Progress"] as level, index}
-                    <p>{level.level_name}, {level.percent_completed}%</p>
+                    {#if level.youtube_video}
+                        <a href={level.youtube_video} target="_blank">
+                            <u><p>{level.level_name}, {level.percent_completed}%</p></u>
+                        </a>
+                    {:else}
+                        <p>{level.level_name}, {level.percent_completed}%</p>
+                    {/if}
                 {/each}
             </Tabs.Content>
+            
         </Tabs.Root>
     {:catch error}
         <p>{error.message}</p>
