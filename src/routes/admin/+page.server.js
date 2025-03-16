@@ -301,6 +301,41 @@ export const actions = {
         }
     },
 
+    updateListRequirement: async ({request, locals}) => {
+        const data = Object.fromEntries(await request.formData());
+        
+        try {
+            const levelDetails = await locals.pb.collection('levels').getFirstListItem(`level_name="${data.level_name}"`);
+            console.log(levelDetails);
+            const updateRecord = await locals.pb.collection('levels').update(levelDetails.id, {
+                "list_requirement": Number(data.list_requirement)
+            });
+            const logRecord = await locals.pb.collection('admin_activity').create({
+                "action": "UPDATE_LIST_REQUIREMENT",
+                "admin": locals.user.email,
+                "data": updateRecord
+            });
+
+            await locals.pb.collection('admin_activity').create({
+                "action": "CHANGE LEVEL LEADERBOARD",
+                "admin": locals.user.email,
+                "data": JSON.stringify(logRecord),
+            });
+
+            return {
+                formname: "updateListRequirement",
+                level_name: data.level_name,
+                list_requirement: data.list_requirement,
+                success: true
+            }
+        } catch(error) {
+            return {
+                formname: "updateListRequirement",
+                error: error.message
+            }
+        }
+    },
+
     deleteAnnouncement: async ({ request, locals }) => {
         const data = Object.fromEntries(await request.formData());
         try {

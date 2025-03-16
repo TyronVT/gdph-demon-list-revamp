@@ -16,7 +16,12 @@
         <p>Fetching levels ...</p>
     {:then data}
         {#each data as level, index}
-            <Level levelName={level.level_name} levelRank={level.level_rank_int} levelPoints={level.level_points} />
+            <Level 
+                levelName={level.level_name} 
+                levelRank={level.level_rank_int} 
+                levelPoints={level.level_points} 
+                listRequirement={level.list_requirement} 
+            />
         {/each}
     {:catch error}
         <p>{error.message}</p>

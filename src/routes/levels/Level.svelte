@@ -10,6 +10,7 @@
     export let levelName;
     export let levelPoints;
     export let levelRank;
+    export let listRequirement;
     
     let showLeaderboard = false;
 
@@ -28,14 +29,13 @@
     <Card.Root class="flex justify-between items-center p-4">
         <Card.Header>
             <Card.Title>
-                    <h1>
-                        #{levelRank} - {levelName}
-                    </h1>        
+                <h1>#{levelRank} - {levelName}</h1>        
             </Card.Title>
             <Card.Description>
-                <p>
-                    {levelPoints} points
-                </p>            
+                <p>{levelPoints} points</p>
+                {#if levelRank <= 75}
+                    <p>List Requirement: <span class="font-bold">{listRequirement}%</span></p>
+                {/if}
             </Card.Description>
         </Card.Header>
     

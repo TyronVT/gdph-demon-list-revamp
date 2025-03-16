@@ -17,11 +17,13 @@
     $: canAddDemon = checkPermissions($user, PERMISSIONS.ADD_DEMON);
     $: canChangeDemonRank = checkPermissions($user, PERMISSIONS.CHANGE_DEMON_RANK);
     $: canDeleteDemon = checkPermissions($user, PERMISSIONS.DELETE_DEMON);
+    $: canUpdateListRequirement = checkPermissions($user, PERMISSIONS.UPDATE_LIST_REQUIREMENT);
 
     // Loading states for each form
     let isAddingDemon = false;
     let isChangingRank = false;
     let isDeletingDemon = false;
+    let isUpdatingListRequirement = false;
 
     // Enhanced form submission handler with loading state
     const handleSubmit = (formType) => {
@@ -37,6 +39,9 @@
                 case 'delete':
                     isDeletingDemon = true;
                     break;
+                case 'updateListRequirement':
+                    isUpdatingListRequirement = true;
+                    break;
             }
 
             return async ({ result, update }) => {
@@ -50,6 +55,9 @@
                         break;
                     case 'delete':
                         isDeletingDemon = false;
+                        break;
+                    case 'updateListRequirement':
+                        isUpdatingListRequirement = false;
                         break;
                 }
                 
@@ -184,10 +192,6 @@
                 <p>{form.error}</p>
             {/if}
         {/if}
-
-
-
-
     </Card.Root>
     {/if} 
 
@@ -243,4 +247,58 @@
     </Card.Root>
     {/if}
 
+    <!-- Update List Requirement -->
+    {#if canUpdateListRequirement}
+    <Card.Root class="w-9/12 flex flex-col items-center">
+        <Card.Header>
+            <Card.Title>
+                Update demon list requirement
+            </Card.Title>
+        </Card.Header>
+
+        <Separator />
+
+        <Card.Content>
+            <form action="?/updateListRequirement" method="POST" use:enhance={handleSubmit('updateListRequirement')}>
+                <p>Search demon:</p>
+                <input type="text" placeholder="Type to search..." bind:value={searchQueryChange} disabled={isUpdatingListRequirement} />
+
+                <select id="demons-select" name="level_name" disabled={isUpdatingListRequirement} required>
+                    {#await items}
+                        <p>Waiting ... </p>
+                    {:then levels}
+                        {#each levels as level}
+                            {#if level.level_name.toLowerCase().includes(searchQueryChange.toLowerCase())}
+                                <option value="{level.level_name}">#{level.level_rank_int}. {level.level_name}</option>
+                            {/if}
+                        {/each} 
+                    {:catch error}
+                        <p>{error.message}</p>
+                    {/await}
+                </select>
+
+                <br><br>
+                <p>Enter list requirement:</p>
+                <input type="number" class="text-input" id="list_requirement" name="list_requirement" disabled={isUpdatingListRequirement}>
+                <br><br>
+                <Button type="submit" disabled={isUpdatingListRequirement}>
+                    <span class="button-content">
+                        Update List Requirement
+                        {#if isChangingRank}
+                            <span class="spinner"></span>
+                        {/if}
+                    </span>
+                </Button>
+            </form>
+        </Card.Content>
+        {#if form?.formname === "updateListRequirement"}
+            {#if form?.success}
+                <p>Successfully updated list requirement for <strong>{form.level_name}</strong> to <strong>{form.list_requirement}</strong> (refresh to see changes)</p>
+                {/if}
+            {#if form?.error}
+                <p>{form.error}</p>
+            {/if}
+        {/if}
+    </Card.Root>
+    {/if} 
 </div>
