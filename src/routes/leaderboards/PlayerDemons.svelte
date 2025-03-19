@@ -1,5 +1,6 @@
 <script lang="ts">
     import { slide } from "svelte/transition";
+    import Separator from "$lib/components/ui/separator/separator.svelte";
     import PlayerDemonsContainer from "./PlayerDemonsContainer.svelte"
     import * as Tabs from "$lib/components/ui/tabs/index";
     export let demons_completed: Promise<any>;
@@ -12,11 +13,27 @@
         </div>
     {:then data}
         <Tabs.Root value="DemonsGroup" class="text-center">
-            <Tabs.List class="grid grid-cols-4">
-                <Tabs.Trigger value="main">Main [{data["Main Demons"].length}]</Tabs.Trigger>
-                <Tabs.Trigger value="extended">Extended [{data["Extended Demons"].length}]</Tabs.Trigger>
-                <Tabs.Trigger value="legacy">Legacy [{data["Legacy List"].length}]</Tabs.Trigger>
-                <Tabs.Trigger value="progress">In Progress [{data["In Progress"].length}]</Tabs.Trigger>
+            <Tabs.List class="grid grid-cols-4 h-full">
+                <Tabs.Trigger value="main">
+                    <div class="flex flex-wrap">
+                        <p class="text-wrap">Main [{data["Main Demons"].length}]</p>
+                    </div>
+                </Tabs.Trigger>
+                <Tabs.Trigger value="extended">
+                    <div class="flex flex-wrap">
+                        <p class="text-wrap">Extended [{data["Extended Demons"].length}]</p>
+                    </div>
+                </Tabs.Trigger>
+                <Tabs.Trigger value="legacy">
+                    <div class="flex flex-wrap">
+                        <p class="text-wrap">Legacy [{data["Legacy List"].length}]</p>
+                    </div>
+                </Tabs.Trigger>
+                <Tabs.Trigger value="progress">
+                    <div class="flex flex-wrap">
+                        <p class="text-wrap">In Progress [{data["In Progress"].length}]</p>
+                    </div>
+                </Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content value="main">
                 {#if data["Main Demons"].length <= 0}
