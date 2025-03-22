@@ -1,4 +1,6 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import * as Card from "$lib/components/ui/card/index";
     import { Button } from "$lib/components/ui/button/index";
     import { Separator } from "$lib/components/ui/separator/index";
@@ -14,35 +16,37 @@
         .then(response => response.json());
     }
 
-    export let data;
-    export let form;
+    /** @type {{data: any, form: any}} */
+    let { data, form } = $props();
 
     // General Items
     let items = data;
-    let isLoadingLevels = false;
+    let isLoadingLevels = $state(false);
     
     // Loading states for each form
-    let isAddingPlayer = false;
-    let isAddingDemonToPlayer = false;
-    let isRemovingPlayer = false;
-    let isRemovingDemonFromPlayer = false;
+    let isAddingPlayer = $state(false);
+    let isAddingDemonToPlayer = $state(false);
+    let isRemovingPlayer = $state(false);
+    let isRemovingDemonFromPlayer = $state(false);
     let isChangingLevelLeaderboardPosition = false;
 
     // Search terms for filtering
-    let selectedPlayer = '';
-    let playerSearch = '';
-    let demonSearch = '';
-    let removePlayerSearch = '';
-    let playerLevels = [];
+    let selectedPlayer = $state('');
+    let playerSearch = $state('');
+    let demonSearch = $state('');
+    let removePlayerSearch = $state('');
+    let playerLevels = $state([]);
 
     // Filter function for search
     const filterItems = (items, search) => {
         return items.filter(item => item.player_name.toLowerCase().includes(search.toLowerCase()));
     };
     
-    $: if (filterItems(data.players, playerSearch).length === 1) {
-    selectedPlayer = filterItems(data.players, playerSearch)[0].player_name;
-    }
+    run(() => {
+        if (filterItems(data.players, playerSearch).length === 1) {
+        selectedPlayer = filterItems(data.players, playerSearch)[0].player_name;
+        }
+    });
 
     const filterDemons = (levels, search) => {
         return levels.filter(level => level.level_name.toLowerCase().includes(search.toLowerCase()));
@@ -122,16 +126,18 @@
     };
 
     // Update playerLevels when selectedPlayer changes
-    $: if (selectedPlayer) {
-            getSpecificPlayerLevels(selectedPlayer).then(levels => {
-                playerLevels = levels;
-            });
-        } else {
-            playerLevels = [];
-        }
+    run(() => {
+        if (selectedPlayer) {
+                getSpecificPlayerLevels(selectedPlayer).then(levels => {
+                    playerLevels = levels;
+                });
+            } else {
+                playerLevels = [];
+            }
+    });
 
     // ================== DRAG AND DROP FUNCTIONS =================== //
-    let levelLeaderboardOfLevelCurrentlyBeingViewed = [];
+    let levelLeaderboardOfLevelCurrentlyBeingViewed = $state([]);
     function handleDndConsider(e) {
         levelLeaderboardOfLevelCurrentlyBeingViewed = e.detail.items;
     }
@@ -143,14 +149,16 @@
         }
     }
 
-    let selectedLevel = null;
-    $: if (selectedLevel) {
-        fetchLeaderboard(selectedLevel).then(players => {
-            levelLeaderboardOfLevelCurrentlyBeingViewed = players;
-        });
-    } else {
-        levelLeaderboardOfLevelCurrentlyBeingViewed = [];
-    } 
+    let selectedLevel = $state(null);
+    run(() => {
+        if (selectedLevel) {
+            fetchLeaderboard(selectedLevel).then(players => {
+                levelLeaderboardOfLevelCurrentlyBeingViewed = players;
+            });
+        } else {
+            levelLeaderboardOfLevelCurrentlyBeingViewed = [];
+        }
+    }); 
 
     async function handleLevelChange(e) {
         selectedLevel = e.target.value;
@@ -162,11 +170,11 @@
         }
     }
 
-    $: canAddPlayer = checkPermissions($user, PERMISSIONS.ADD_PLAYER);
-    $: canAddDemonToPlayer = checkPermissions($user, PERMISSIONS.ADD_DEMON_TO_PLAYER);
-    $: canDeletePlayer = checkPermissions($user, PERMISSIONS.DELETE_PLAYER);
-    $: canRemoveDemonFromPlayer = checkPermissions($user, PERMISSIONS.REMOVE_DEMON_FROM_PLAYER);
-    $: canChangePlayerPositionInLevel = checkPermissions($user, PERMISSIONS.CHANGE_PLAYER_POSITION_IN_LEVEL)
+    let canAddPlayer = $derived(checkPermissions($user, PERMISSIONS.ADD_PLAYER));
+    let canAddDemonToPlayer = $derived(checkPermissions($user, PERMISSIONS.ADD_DEMON_TO_PLAYER));
+    let canDeletePlayer = $derived(checkPermissions($user, PERMISSIONS.DELETE_PLAYER));
+    let canRemoveDemonFromPlayer = $derived(checkPermissions($user, PERMISSIONS.REMOVE_DEMON_FROM_PLAYER));
+    let canChangePlayerPositionInLevel = $derived(checkPermissions($user, PERMISSIONS.CHANGE_PLAYER_POSITION_IN_LEVEL))
 </script>
 
 <style>
@@ -396,7 +404,7 @@
             <input type="text" bind:value={demonSearch} placeholder="Search demon..." />
             
             <form action="?/changeLeaderboardPositions" method="POST" use:enhance={handleSubmit('changeLevelLeaderboardPosition')}>
-                <select id="demons-select" name="level_name" on:change="{handleLevelChange}">
+                <select id="demons-select" name="level_name" onchange={handleLevelChange}>
                     {#each filterDemons(items.levels, demonSearch) as level}
                         <option value={level.level_name} id="{level.id}">#{level.level_rank_int}. {level.level_name}</option>
                     {/each}
@@ -406,7 +414,7 @@
                     {#if selectedLevel}
                         {#if levelLeaderboardOfLevelCurrentlyBeingViewed.length > 0}
                             <div use:dndzone="{{items: levelLeaderboardOfLevelCurrentlyBeingViewed}}"
-                            on:consider="{handleDndConsider}" on:finalize="{handleDndFinalize}">
+                            onconsider={handleDndConsider} onfinalize={handleDndFinalize}>
                                 {#each levelLeaderboardOfLevelCurrentlyBeingViewed as player(player.id)}
                                     <p>{player.leaderboard_pos}. {player.player_name}</p>
                                 {/each}

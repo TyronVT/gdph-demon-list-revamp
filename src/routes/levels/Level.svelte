@@ -7,12 +7,21 @@
     import * as Card from "$lib/components/ui/card/index";
 	import LeveLeaderboard from "./LeveLeaderboard.svelte";
 
-    export let levelName;
-    export let levelPoints;
-    export let levelRank;
-    export let listRequirement;
+    interface Props {
+        levelName: any;
+        levelPoints: any;
+        levelRank: any;
+        listRequirement: any;
+    }
+
+    let {
+        levelName,
+        levelPoints,
+        levelRank,
+        listRequirement
+    }: Props = $props();
     
-    let showLeaderboard = false;
+    let showLeaderboard = $state(false);
 
     function toggleLeaderboard() {
         showLeaderboard = !showLeaderboard;

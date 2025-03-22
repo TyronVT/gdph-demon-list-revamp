@@ -9,16 +9,19 @@
     import { ChevronUp } from 'lucide-svelte';
     import { PanelLeftClose } from 'lucide-svelte';
     import { isDarkMode } from '../stores';
+    import { slide } from "svelte/transition";
     import "../app.css";
 
-    export let data;
+    /** @type {{data: any, children?: import('svelte').Snippet}} */
+    let { data, children } = $props();
 
-    let isMobileMenuOpen = false;
+    let isMobileMenuOpen = $state(false);
 
     const toggleMobileMenu = () => {
         isMobileMenuOpen = !isMobileMenuOpen;
     };
 
+    
     // Optional: Close the mobile menu when the window is resized to a larger screen
     const handleResize = () => {
         if (window.innerWidth >= 768) {
@@ -31,7 +34,7 @@
         return () => window.removeEventListener('resize', handleResize);
     });
 
-    let isListCategoryRevealed = false;
+    let isListCategoryRevealed = $state(false);
     const toggleListCategories = () => {
         isListCategoryRevealed = !isListCategoryRevealed;
     };
@@ -148,7 +151,7 @@
 
     <!-- Mobile Menu Button -->
     <div class="md:hidden flex items-center z-10">
-        <button class="p-2 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring" on:click={toggleMobileMenu}>
+        <button class="p-2 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring" onclick={toggleMobileMenu}>
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
@@ -163,7 +166,7 @@
       <div class="flex h-full flex-col overflow-y-auto border-r px-3 py-4 {$isDarkMode ? "bg-black" : "bg-white"}">
         <div class="mb-10 flex items-center rounded-lg px-3 py-2 text-slate-900 dark:text-white justify-between">
           <span class="ml-3 text-base font-semibold">GDPH Demonlist</span>
-          <button on:click={toggleMobileMenu}>
+          <button onclick={toggleMobileMenu}>
               <PanelLeftClose/>
           </button>
         </div>
@@ -180,7 +183,7 @@
           </li>
 
           <li>
-            <button on:click={toggleListCategories} class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
+            <button onclick={toggleListCategories} class="flex items-center rounded-lg px-3 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
                 {#if isListCategoryRevealed}
                     <ChevronUp />
                 {:else}
@@ -189,7 +192,7 @@
                 <span class="ml-3 flex-1 whitespace-nowrap">Top 150 List</span>
             </button>
 
-            <ul class="demons-category {isListCategoryRevealed ? true : false}">
+            <ul class="demons-category" class:demons-category={isListCategoryRevealed}>
                 <a href="/levels/main" class="flex items-center rounded-lg px-6 py-2 text-slate-900 hover:bg-slate-100 dark:text-white dark:hover:bg-slate-700">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 lucide lucide-home" width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -320,18 +323,8 @@
             </Button>
           </li>
         </ul>
-        <!-- <div class="mt-auto flex">
-          <div class="flex w-full justify-between">
-            <span class="text-sm font-medium text-black dark:text-white">email@example.com</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" aria-roledescription="more menu" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5 text-black dark:text-white lucide lucide-more-horizontal" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="1" />
-              <circle cx="19" cy="12" r="1" />
-              <circle cx="5" cy="12" r="1" />
-            </svg>
-          </div>
-        </div> -->
       </div>
     </aside>
 </div>
 {/if}
-<slot></slot>
+{@render children?.()}

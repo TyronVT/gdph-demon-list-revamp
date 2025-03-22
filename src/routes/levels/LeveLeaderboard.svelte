@@ -1,7 +1,11 @@
 <script lang="ts">
     import { slide, fade } from "svelte/transition";
 
-    export let leaderboard: Promise<any>;
+    interface Props {
+        leaderboard: Promise<any>;
+    }
+
+    let { leaderboard }: Props = $props();
 </script>
 
 <div class="flex flex-col gap-10" transition:slide={{delay: 0, duration: 300}}>

@@ -7,11 +7,15 @@
     import * as Card from "$lib/components/ui/card/index";
 	import PlayerDemons from "./PlayerDemons.svelte";
 
-    export let playerName;
-    export let playerPoints;
-    export let playerRank;
+    interface Props {
+        playerName: any;
+        playerPoints: any;
+        playerRank: any;
+    }
+
+    let { playerName, playerPoints, playerRank }: Props = $props();
     
-    let showDemons = false;
+    let showDemons = $state(false);
 
     async function getPlayerDemons(playerName: String) {
         return fetch(`${SERVER_URL}/api/player_demons/${playerName}`)

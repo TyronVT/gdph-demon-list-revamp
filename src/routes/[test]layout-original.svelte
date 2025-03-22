@@ -6,8 +6,13 @@
     import Sun from "lucide-svelte/icons/sun";
     import Moon from "lucide-svelte/icons/moon";
     import "../app.css";
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
 
-    let isMobileMenuOpen = false;
+    let { children }: Props = $props();
+
+    let isMobileMenuOpen = $state(false);
 
     const toggleMobileMenu = () => {
         isMobileMenuOpen = !isMobileMenuOpen;
@@ -136,7 +141,7 @@
 
     <!-- Mobile Menu Button -->
     <div class="md:hidden flex items-center">
-        <button class="p-2 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring" on:click={toggleMobileMenu}>
+        <button class="p-2 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring" onclick={toggleMobileMenu}>
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
@@ -192,4 +197,4 @@
     </div>
 {/if}
 
-<slot></slot>
+{@render children?.()}

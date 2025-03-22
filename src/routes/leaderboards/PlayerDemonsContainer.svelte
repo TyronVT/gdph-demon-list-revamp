@@ -1,6 +1,10 @@
 <script lang="ts">
     import { ExternalLink } from "lucide-svelte";
-    export let levelsToBeDisplayed: Promise<any>; 
+    interface Props {
+        levelsToBeDisplayed: Promise<any>;
+    }
+
+    let { levelsToBeDisplayed }: Props = $props();
 
 </script>
 
