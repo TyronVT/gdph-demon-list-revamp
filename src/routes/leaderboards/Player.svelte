@@ -43,7 +43,7 @@
             </Card.Description>
         </Card.Header>
     
-        <Button variant="outline" size="icon" on:click={toggleDemons}>
+        <Button variant="outline" size="icon" onclick={toggleDemons}>
             {#if showDemons}
                 <ChevronUp />
             {:else}

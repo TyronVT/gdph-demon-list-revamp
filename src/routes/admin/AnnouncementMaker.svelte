@@ -31,7 +31,6 @@
     
     import Separator from "$lib/components/ui/separator/separator.svelte";
     import { enhance } from '$app/forms';
-    import * as AlertDialog from "$lib/components/ui/alert-dialog";
 
     let element = $state();
     let editor = $state();

@@ -138,7 +138,7 @@
             </form>
             {/if}
 
-            <Button on:click={() => {
+            <Button onclick={() => {
                 toggleMode();
                 setDarkMode();
             }} variant="ghost" size="icon" class="theme-toggle-button">
@@ -313,7 +313,7 @@
           {/if}
 
           <li>
-            <Button on:click={() => {
+            <Button onclick={() => {
                 toggleMode();
                 setDarkMode();
             }} variant="ghost" size="icon" class="theme-toggle-button">
