@@ -19,12 +19,15 @@ export const actions = {
         const data = Object.fromEntries(await request.formData());
         try {
             var newRank = Number(data['level_rank_int']);
+            console.log(data);
             var levelName = data['level_name'];
             const changeDemonRankURL = `${SERVER_URL}/api/change_level_rank`;
             let jsonData = {
                 "level_name": levelName,
                 "rank": newRank
             };
+            console.log(jsonData);
+            console.log(`${changeDemonRankURL}/${encodeURIComponent(JSON.stringify(jsonData))}`);
             const response = await fetch(
                 `${changeDemonRankURL}/${encodeURIComponent(JSON.stringify(jsonData))}`,
                 {
@@ -35,11 +38,12 @@ export const actions = {
             );
             
             if (!response.ok) {
+                console.log(response);
                 return {
                     formname: "changeDemonRank",
                     level_name: levelName,
                     level_new_rank: newRank,
-                    error: "401: Unauthorized!" 
+                    error: response.statusText
                 };
             } else {
                 await locals.pb.collection('admin_activity').create({

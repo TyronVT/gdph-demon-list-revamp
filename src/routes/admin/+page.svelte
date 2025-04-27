@@ -4,8 +4,8 @@
     import { checkPermissions } from "$lib/rbacUtils";
     import { PERMISSIONS } from "../../constants";
     import { user } from "../../stores";
-    export let data;
-    export let form;
+    /** @type {{data: any, form: any}} */
+    let { data, form } = $props();
     
     $user = data.user;
     
@@ -21,12 +21,12 @@
         checkPermissions($user, PERMISSIONS.DELETE_PLAYER)
     )
     
-    let demonManager; 
+    let demonManager = $state(); 
     if (canManageDemons) {
         demonManager = import('./DemonManager.svelte');
     }
 
-    let playerManager;
+    let playerManager = $state();
     if (canManagePlayers) {
         playerManager = import('./PlayerManager.svelte');
     }

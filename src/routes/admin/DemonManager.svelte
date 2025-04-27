@@ -6,24 +6,24 @@
     import { user } from "../../stores";
     import { checkPermissions } from "$lib/rbacUtils";
     import { PERMISSIONS } from "../../constants";
-    export let data;
-    export let form;
+    /** @type {{data: any, form: any}} */
+    let { data, form } = $props();
     let items = data;
 
     // Search query states
-    let searchQueryChange = '';
-    let searchQueryDelete = '';
+    let searchQueryChange = $state('');
+    let searchQueryDelete = $state('');
 
-    $: canAddDemon = checkPermissions($user, PERMISSIONS.ADD_DEMON);
-    $: canChangeDemonRank = checkPermissions($user, PERMISSIONS.CHANGE_DEMON_RANK);
-    $: canDeleteDemon = checkPermissions($user, PERMISSIONS.DELETE_DEMON);
-    $: canUpdateListRequirement = checkPermissions($user, PERMISSIONS.UPDATE_LIST_REQUIREMENT);
+    let canAddDemon = $derived(checkPermissions($user, PERMISSIONS.ADD_DEMON));
+    let canChangeDemonRank = $derived(checkPermissions($user, PERMISSIONS.CHANGE_DEMON_RANK));
+    let canDeleteDemon = $derived(checkPermissions($user, PERMISSIONS.DELETE_DEMON));
+    let canUpdateListRequirement = $derived(checkPermissions($user, PERMISSIONS.UPDATE_LIST_REQUIREMENT));
 
     // Loading states for each form
-    let isAddingDemon = false;
-    let isChangingRank = false;
-    let isDeletingDemon = false;
-    let isUpdatingListRequirement = false;
+    let isAddingDemon = $state(false);
+    let isChangingRank = $state(false);
+    let isDeletingDemon = $state(false);
+    let isUpdatingListRequirement = $state(false);
 
     // Enhanced form submission handler with loading state
     const handleSubmit = (formType) => {

@@ -3,8 +3,8 @@
     import { Editor } from '@tiptap/core'
     import StarterKit from '@tiptap/starter-kit'
   
-    let element
-    let editor
+    let element = $state()
+    let editor = $state()
   
     onMount(() => {
       editor = new Editor({
@@ -29,23 +29,23 @@
   
   {#if editor}
     <button
-      on:click={() => editor.chain().focus().toggleHeading({ level: 1}).run()}
+      onclick={() => editor.chain().focus().toggleHeading({ level: 1}).run()}
       class:active={editor.isActive('heading', { level: 1 })}
     >
       H1
     </button>
     <button
-      on:click={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+      onclick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
       class:active={editor.isActive('heading', { level: 2 })}
     >
       H2
     </button>
-    <button on:click={() => editor.chain().focus().setParagraph().run()} class:active={editor.isActive('paragraph')}>
+    <button onclick={() => editor.chain().focus().setParagraph().run()} class:active={editor.isActive('paragraph')}>
       P
     </button>
   {/if}
   
-  <div bind:this={element} />
+  <div bind:this={element}></div>
   
   <style>
     button.active {

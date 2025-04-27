@@ -3,7 +3,11 @@
     import Separator from "$lib/components/ui/separator/separator.svelte";
     import PlayerDemonsContainer from "./PlayerDemonsContainer.svelte"
     import * as Tabs from "$lib/components/ui/tabs/index";
-    export let demons_completed: Promise<any>;
+    interface Props {
+        demons_completed: Promise<any>;
+    }
+
+    let { demons_completed }: Props = $props();
 </script>
 
 <div class="flex flex-col gap-10" transition:slide={{delay: 0, duration: 300}}>

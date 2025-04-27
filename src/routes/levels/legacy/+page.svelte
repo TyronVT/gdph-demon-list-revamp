@@ -11,7 +11,7 @@
 
 <Titlepage titleName="Legacy List" description="" />
 
-<div class="flex flex-col items-center gap-8 pt-8">
+<div class="flex flex-col items-center gap-8 pt-8 pl-2 pr-2">
     {#await getLevels()}
         <p>Fetching players ...</p>
     {:then data}
@@ -21,6 +21,7 @@
                 levelRank={level.level_rank_int} 
                 levelPoints={level.level_points} 
                 listRequirement={level.list_requirement} 
+                thumbnail={level.thumbnail}
             />
         {/each}
     {:catch error}
