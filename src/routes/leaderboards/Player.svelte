@@ -6,14 +6,16 @@
 
     import * as Card from "$lib/components/ui/card/index";
 	import PlayerDemons from "./PlayerDemons.svelte";
+	import Separator from "$lib/components/ui/separator/separator.svelte";
 
     interface Props {
         playerName: any;
         playerPoints: any;
         playerRank: any;
+        hardestDemon: any;
     }
 
-    let { playerName, playerPoints, playerRank }: Props = $props();
+    let { playerName, playerPoints, playerRank, hardestDemon }: Props = $props();
     
     let showDemons = $state(false);
 
@@ -28,8 +30,8 @@
     
 </script>
 
-<Card.Root class="w-8/12">
-    <Card.Root class="flex justify-between items-center p-4">
+<Card.Root class="w-4/6">
+    <Card.Root class="flex justify-between items-center">
         <Card.Header>
             <Card.Title>
                     <h1>
@@ -37,6 +39,9 @@
                     </h1>        
             </Card.Title>
             <Card.Description>
+                <b>Hardest Demon:</b>
+                {hardestDemon}
+                <Separator class="my-1"/>
                 <p>
                     {playerPoints} points
                 </p>            

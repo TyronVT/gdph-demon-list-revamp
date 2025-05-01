@@ -18,7 +18,11 @@
         <p>Fetching players ...</p>
     {:then data}
         {#each data as player, index}
-            <Player playerName={player.player_name} playerRank={index + 1} playerPoints={Number(player.total_points).toFixed(2)} />
+            <Player 
+            playerName={player.player_name} 
+            playerRank={index + 1} 
+            playerPoints={Number(player.total_points).toFixed(2)} 
+            hardestDemon={player.hardest_level}/>
         {/each}
     {:catch error}
         <p>{error.message}</p>
