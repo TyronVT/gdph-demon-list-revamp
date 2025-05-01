@@ -113,12 +113,6 @@
                         <p>Legacy List</p>
                     </a>
                 </Menubar.Item>
-                <Menubar.Item>
-                    <p>Pending List Changes</p>
-                </Menubar.Item>
-                <Menubar.Item>
-                    <p>Notable Progress</p>
-                </Menubar.Item>
             </Menubar.Content>
     
             <Button variant="ghost" href="/leaderboards">Leaderboards</Button>
