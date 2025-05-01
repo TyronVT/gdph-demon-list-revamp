@@ -43,7 +43,7 @@
     }
 </script>
 
-<Card.Root class="l:w-8/12 xl:w-8/12">
+<Card.Root class="w-full sm:w-8/12">
     <Card.Root class="flex items-center justify-center">
         <div class="flex items-center w-5/6">
             {#if thumbnail === ""}

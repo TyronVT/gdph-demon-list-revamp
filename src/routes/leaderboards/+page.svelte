@@ -13,7 +13,7 @@
 
 <Titlepage titleName="Leaderboards" description="Ranked list of people with points on the Demon List" />
 
-<div class="flex flex-col items-center gap-8 pt-8">
+<div class="flex flex-col items-center justify-center gap-4 pt-8">
     {#await getPlayers()}
         <p>Fetching players ...</p>
     {:then data}

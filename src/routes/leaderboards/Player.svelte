@@ -30,7 +30,7 @@
     
 </script>
 
-<Card.Root class="w-4/6">
+<Card.Root class="sm:w-[70%] md:w-[70%] w-[95%]">
     <Card.Root class="flex justify-between items-center">
         <Card.Header>
             <Card.Title>
