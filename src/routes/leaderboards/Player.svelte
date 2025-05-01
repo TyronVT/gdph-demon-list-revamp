@@ -39,8 +39,8 @@
                     </h1>        
             </Card.Title>
             <Card.Description>
-                <b>Hardest Demon:</b>
-                {hardestDemon}
+                Hardest Demon:
+                <b>{hardestDemon}</b>
                 <Separator class="my-1"/>
                 <p>
                     {playerPoints} points
