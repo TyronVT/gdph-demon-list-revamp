@@ -16,6 +16,6 @@ export const PERMISSIONS = {
     ADD_ANNOUNCEMENT: "add:announcement",
     REMOVE_ANNOUNCEMENT: "delete:announcement",
     CHANGE_PLAYER_POSITION_IN_LEVEL: "change:player_position_in_level",
-    
+
 };
 

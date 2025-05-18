@@ -1,13 +1,13 @@
 import { PERMISSIONS, ROLES } from "../constants";
 
 let LEADER_PERMS = [];
-for (const perms of Object.keys(PERMISSIONS)) {
+for (const perms of Object.keys(PERMISSIONS) as (keyof typeof PERMISSIONS)[]) {
     LEADER_PERMS.push(PERMISSIONS[perms]);
 }
 
 export const rolePermissions = {
     [ROLES.HELPER]: [
-        PERMISSIONS.ADD_DEMON_TO_PLAYER, 
+        PERMISSIONS.ADD_DEMON_TO_PLAYER,
         PERMISSIONS.ADD_ANNOUNCEMENT,
         PERMISSIONS.CHANGE_PLAYER_POSITION_IN_LEVEL
     ],
